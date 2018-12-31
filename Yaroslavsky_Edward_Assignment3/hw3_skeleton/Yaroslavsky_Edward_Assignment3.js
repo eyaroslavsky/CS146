@@ -1,0 +1,105 @@
+/*
+Edward Yaroslavsky
+I pledge my honor that I have abided by the Stevens Honor System.
+*/
+
+var result = 0;
+var currentOp = "";
+var buffer = 0;
+setDisplay("0");
+
+/**
+ * Resets the state of the calculator and the display
+ */
+function resetCalc() {
+   result = 0;
+   currentOp = "";
+   buffer = 0;
+   setDisplay("0");
+}
+
+/**
+ * Sets the inner text of the div with id="output"
+ * @param {String} str the string to set the inner text to
+ */
+function setDisplay(str) {
+	display = document.getElementById("output");
+	display.innerHTML = str;
+}
+
+/**
+ * Returns the current result of the calculator
+ * Hint: you can use a global variable for the result
+ */
+function getResult() {
+	return result;
+}
+
+/**
+ * Update the calculator state with the next number and sets the display
+ * @param {Number} num the number that was pressed
+ */
+function pressNum(num) {
+	result = result * 10;
+	result = result + num;
+	if (result > 999999999) {
+		result = 999999999;
+	}
+	if (result < -999999999) {
+	   result = -999999999;
+	}
+	setDisplay(result.toString());
+}
+
+/**
+ * Operation is pressed, move the current result value to a temporary buffer and
+ * set the current result to zero.
+ * @param {String} op the operation pressed, either: +,-,*,/
+ */
+function pressOp(op) {
+	if (currentOp != "") {
+		currentOp = op;
+	}
+	else {
+		buffer = result;
+		result = 0;
+		setDisplay(result.toString());
+		currentOp = op;
+	}
+}
+
+/**
+ * Should compute the current operation with the buffer value and current
+ * result value based on the current operation. If there is no current
+ * operation, do nothing.
+ */
+function pressEquals() {
+	if (currentOp == "+") {
+		result = result + buffer;
+	}
+	else if (currentOp == "-") {
+		result = buffer - result;
+	}
+	else if (currentOp == "*") {
+		result = result * buffer;
+	}
+	else if (currentOp == "/") {
+		if (buffer == 0 && result == 0) {
+			setDisplay("ERROR");
+			result = buffer = 0;
+			return;
+		}
+		else {
+			result = Math.floor(buffer / result);
+		}
+	}
+	if (result > 999999999) {
+		result = 999999999;
+	}
+	if (result < -999999999) {
+	   result = -999999999;
+	}
+	setDisplay(result.toString());
+	
+	currentOp = "";
+}
